@@ -1,0 +1,94 @@
+/**
+ * The primary CSS file for the Ricca Slider widget.
+ *
+ * @version		1.1
+ */
+
+/**
+ * Top level element that contains the overflow slider element. This element
+ * will be set to the width defined by 'div.slider'.
+ */
+div.sliders {
+	overflow:hidden;
+	vertical-align:middle;
+}
+
+/**
+ * Contains each individual 'div.slider' element. This element will be set
+ * to the total width of all the 'div.slider' elements.
+ */
+div.sliders div.slider_overflow {
+	display:inline-block;
+	/* For IE7 */
+	zoom:1;
+	*display:inline;
+}
+
+/**
+ * Contains an individual slide's content. Set the width style either inline
+ * or in a separate CSS file to size the widget.
+ */
+div.sliders div.slider {
+	display:inline-block;
+	/* For IE7 */
+	zoom:1;
+	*display:inline;
+}
+
+/**
+ * Contains the navigation images and the current slide indicator images.
+ */
+div.current_slide_indicator {
+	padding-top:35px;
+	text-align:left;
+}
+
+/**
+ * Inline navigation images should be relatively positioned.
+ */
+div#slider_section img.inline {
+	position:relative;
+}
+
+/**
+ * When navigation is inline, make the sliders container must be inline as well.
+ */
+div#slider_section img.inline + div.sliders {
+	display:inline-block;
+	/* For IE7 */
+	zoom:1;
+	*display:inline;
+}
+
+/**
+ * Contains a navigation image allowing the user to navigate to the previous
+ * or next (left or right respectively) slide in the widget.
+ */
+div#slider_section div.slider_prev_next_btn,
+div#slider_section img.inline {
+	width:20px;
+	vertical-align:middle;
+	display:inline-block;
+	/* For IE7 */
+	zoom:1;
+	*display:inline;
+}
+
+/**
+ * An indicator that shows which slide is currently being displayed.
+ */
+div#slider_section div.current_slide_indicator img {
+	vertical-align:middle;
+	padding-left:3px;
+	padding-right:3px;
+}
+
+/**
+ * For enabled navigation images and all current slide indicators,
+ * give the a pointer cursor.
+ */
+div#slider_section div.current_slide_indicator img.slide_indicator,
+div#slider_section div.current_slide_indicator img.enabled,
+div#slider_section img.inline.enabled{
+	cursor: pointer;
+}
