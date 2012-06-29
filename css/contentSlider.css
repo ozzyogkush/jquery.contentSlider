@@ -1,14 +1,14 @@
 /**
  * The primary CSS file for the Ricca Slider widget.
  *
- * @version		1.1
+ * @version		1.2
  */
 
 /**
  * Top level element that contains the overflow slider element. This element
  * will be set to the width defined by 'div.slider'.
  */
-div.sliders {
+div.content_slider_widget div.sliders {
 	overflow:hidden;
 	vertical-align:middle;
 }
@@ -17,7 +17,7 @@ div.sliders {
  * Contains each individual 'div.slider' element. This element will be set
  * to the total width of all the 'div.slider' elements.
  */
-div.sliders div.slider_overflow {
+div.content_slider_widget div.sliders div.slider_overflow {
 	display:inline-block;
 	/* For IE7 */
 	zoom:1;
@@ -28,7 +28,7 @@ div.sliders div.slider_overflow {
  * Contains an individual slide's content. Set the width style either inline
  * or in a separate CSS file to size the widget.
  */
-div.sliders div.slider {
+div.content_slider_widget div.sliders div.slider {
 	display:inline-block;
 	/* For IE7 */
 	zoom:1;
@@ -38,7 +38,7 @@ div.sliders div.slider {
 /**
  * Contains the navigation images and the current slide indicator images.
  */
-div.current_slide_indicator {
+div.content_slider_widget div.current_slide_indicator {
 	padding-top:35px;
 	text-align:left;
 }
@@ -46,14 +46,14 @@ div.current_slide_indicator {
 /**
  * Inline navigation images should be relatively positioned.
  */
-div#slider_section img.inline {
+div.content_slider_widget img.inline {
 	position:relative;
 }
 
 /**
  * When navigation is inline, make the sliders container must be inline as well.
  */
-div#slider_section img.inline + div.sliders {
+div.content_slider_widget img.inline + div.sliders {
 	display:inline-block;
 	/* For IE7 */
 	zoom:1;
@@ -64,8 +64,8 @@ div#slider_section img.inline + div.sliders {
  * Contains a navigation image allowing the user to navigate to the previous
  * or next (left or right respectively) slide in the widget.
  */
-div#slider_section div.slider_prev_next_btn,
-div#slider_section img.inline {
+div.content_slider_widget div.slider_prev_next_btn,
+div.content_slider_widget img.inline {
 	width:20px;
 	vertical-align:middle;
 	display:inline-block;
@@ -77,7 +77,7 @@ div#slider_section img.inline {
 /**
  * An indicator that shows which slide is currently being displayed.
  */
-div#slider_section div.current_slide_indicator img {
+div.content_slider_widget div.current_slide_indicator img {
 	vertical-align:middle;
 	padding-left:3px;
 	padding-right:3px;
@@ -87,8 +87,8 @@ div#slider_section div.current_slide_indicator img {
  * For enabled navigation images and all current slide indicators,
  * give the a pointer cursor.
  */
-div#slider_section div.current_slide_indicator img.slide_indicator,
-div#slider_section div.current_slide_indicator img.enabled,
-div#slider_section img.inline.enabled{
+div.content_slider_widget div.current_slide_indicator img.slide_indicator,
+div.content_slider_widget div.current_slide_indicator img.enabled,
+div.content_slider_widget img.inline.enabled {
 	cursor: pointer;
 }

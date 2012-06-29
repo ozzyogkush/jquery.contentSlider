@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<title>Content Slider Example</title>
+		<title>Content Slider 1.2 Example</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta http-equiv="imagetoolbar" content="no" />
 		<link rel="stylesheet" type="text/css" href="css/contentSlider.css" />
@@ -9,7 +9,9 @@
 		<script type="text/javascript" src="jquery.contentSlider.src.js"></script> <!-- REQUIRED FILE -->
 
 		<style type='text/css'>
-			div#slider_section {
+			div#slider_section_right,
+			div#slider_section_left,
+			div#slider_section_inline {
 				width:500px;
 				margin-left:40px;
 				border:1px solid black;
@@ -21,12 +23,11 @@
 	</head>
 	
 	<body>
-		Basic example of the RiccaSlider class. View the source code.<br /><br />
-
-		 <!-- REQUIRED SECTION -->
-
-
-		<div id="slider_section">
+		Basic example of the contentSlider class. View the source code.<br /><br />
+		
+		<!-- REQUIRED SECTION -->
+		
+		<div id="slider_section_left">
 			<div class='sliders'>
 				<div class='slider_overflow'>
 					<div class='slider'>
@@ -35,23 +36,21 @@
 						Slide 2... Put something here, style it, and be done!
 					</div><div class='slider'><!-- Note how there is no whitespace between the end and start tags -->
 						Slide 3... Put something here, style it, and be done!
-					</div><div class='slider'><!-- Note how there is no whitespace between the end and start tags -->
-						Slide 4... Put something here, style it, and be done!
-					</div><div class='slider'><!-- Note how there is no whitespace between the end and start tags -->
-						Slide 5... Put something here, style it, and be done!
-					</div><div class='slider'><!-- Note how there is no whitespace between the end and start tags -->
-						Slide 6... Put something here, style it, and be done!
 					</div>
 				</div>
 			</div>
-		</div>
+		</div><br />
+		
+		
 		<script type='text/javascript'>
 			// Initialize global rollovers for the site.
-			$('#slider_section').contentSlider({image_base : 'images',
-												slide_speed : 1000,
-												slider_height : 150,
-												auto_scroll_timeout : 8000,
-												navigation_inline : true});
+			$('#slider_section_left').contentSlider({image_base : 'images',
+													 slide_speed : 1000,
+													 slider_height : 150,
+													 auto_scroll_timeout : 8000,
+													 navigation_inline : false,
+													 autoscroll_direction : 'left',
+													 debug: true});
 		</script>
 	</body>
 </html>
