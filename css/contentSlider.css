@@ -1,7 +1,7 @@
 /**
  * The primary CSS file for the Ricca Slider widget.
  *
- * @version		1.2
+ * @version		1.2.1
  */
 
 /**
@@ -81,6 +81,15 @@ div.content_slider_widget div.current_slide_indicator img {
 	vertical-align:middle;
 	padding-left:3px;
 	padding-right:3px;
+}
+
+/**
+ * By default, the left/right slider arrow buttons are 20*20px.
+ */
+div.content_slider_widget div.current_slide_indicator img.slider_left,
+div.content_slider_widget div.current_slide_indicator img.slider_right {
+	width:20px;
+	height:20px;
 }
 
 /**

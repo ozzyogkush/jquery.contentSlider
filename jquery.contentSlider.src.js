@@ -1,32 +1,56 @@
 /**
+ * jQuery Content Slider Plugin
+ * ============================
+ *
  * Creates a slider widget which can take an arbitrary number of div elements and turn
  * it into a functional left/right sliding enter/exit system. The slider widget can
  * auto-start with a specified delay.
  *
- * Requires jQuery.js 1.7.0 or higher to function.
+ * Cross-platform Compatibility
+ * ----------------------------
+ * 
+ * * Firefox 3+
+ * * Webkit (Google Chrome, Apple's Safari)
+ * * Internet Explorer 7+
+ * * Opera
+ * 
+ * Requirements
+ * ------------
+ * 
+ * * jQuery 1.7.0+
  *
- * Usage:
- * 	Top level div element with class 'sliders'. Inside the 'sliders' div is a single div with the
- * 	class 'slider_overflow'. Inside the 'slider_overflow' div there are any number of
- * 	div elements each with the class 'slider'. Each 'slider' div will contain the content that
- * 	will appear in that slide. The Previous and Next buttons are automatically added for
- * 	the user, and the slide indicators are automatically added (one per slide) for the user
- * 	as well.
+ * Feature Overview
+ * ----------------
+ * * Slide indicators can be below the slide set, or inline with it
+ * * Can be set to auto-slide to the right or to the left
+ * * Pauses auto-slide when the user hovers the current slide
+ * * Halts auto-slide when the user manually selects a slide
  *
- * 	CAVEAT: There must not be any whitespace between the ending and start tags of adjacent
- * 	'slider' divs. Browsers rendering such whitespace will mess up computed widths and one
- * 	or more of the sliders would render below the slider section.
+ * Usage
+ * =====
+ * Create a top level `<div>` element with the class 'sliders'. Inside is a single
+ * `<div>` element with the class 'slider_overflow'. Inside the 'slider_overflow'
+ * `<div>` there are any number of `<div>` elements each with the class 'slider'.
+ *
+ * Each 'slider' `<div>` will contain the content that will appear in that slide.
+ * The Previous and Next buttons are automatically added for the user, and the
+ * slide indicators are automatically added (one per slide) for the user as well.
+ *
+ * NOTE: There must not be any whitespace between the ending and start tags of adjacent
+ * 'slider' `<div>`s. Browsers rendering such whitespace will mess up computed widths and one
+ * or more of the sliders would render below the slider section.
  * 		EG: ...</div><div class='slider'>...
  *
- * @changelog	1.2	-	added 'autoscroll_direction' option. Values are 'right' and 'left'. Optional. Default is 'right'.
- * 					-	added 'debug' option. Set to 'true' to enable console.log statements for testing functionality.
- * 					-	added short-circuit to stop multiple scrolls at once.
- * @changelog	1.1 -	added 'navigation_inline' option. Set to 'true' to make prev/next navigation buttons appear inline with slider widget
+ * @changelog	1.2.1	-	added README file. added 'method' parameter to enable the user to call a function
+ * @changelog	1.2		-	added 'autoscroll_direction' option. Values are 'right' and 'left'. Optional. Default is 'right'.
+ * 						-	added 'debug' option. Set to 'true' to enable console.log statements for testing functionality.
+ * 						-	added short-circuit to stop multiple scrolls at once.
+ * @changelog	1.1		-	added 'navigation_inline' option. Set to 'true' to make prev/next navigation buttons appear inline with slider widget
  * 
  * @example		See example.html
  * @class		ContentSlider
  * @name		ContentSlider
- * @version		1.2
+ * @version		1.2.1
  * @author		Derek Rosenzweig <derek.rosenzweig@gmail.com, drosenzweig@riccagroup.com>
  */
 (function($) {
@@ -40,13 +64,14 @@
      * @access		public
      * @memberOf	ContentSlider
      * @since		1.0
-     * @updated		1.2
+     * @updated		1.2.1
      *
-     * @param		options				Object				An object containing various options.
+     * @param		options_or_method	Object				An object containing various options, or a string containing a method name.
+     * 															Valid method names: 'reinit'
      *
      * @returns		this				jQuery				The jQuery element being extended gets returned for chaining purposes
      */
-	$.fn.contentSlider = function(options) {
+	$.fn.contentSlider = function(options_or_method) {
 		//--------------------------------------------------------------------------
 		//
 		//  Variables and get/set functions
@@ -75,7 +100,16 @@
 			autoscroll_direction : 'right',			// Determines which direction the widget will auto-scroll. Options: 'left', 'right'. Default 'right'. Optional.
 			debug : false							// Flag indicating whether this should output console.log debug statements. Default false. Optional.
 		};
-		options = $.extend(default_options, options);
+		
+		/**
+		 * The actual final set of extended options.
+		 *
+		 * @access		public
+		 * @type		Object
+		 * @memberOf	ContentSlider
+		 * @since		1.0
+		 */
+		var options = {};
 		
 		/**
 		 * The div element which holds the slider widget and which is extending
@@ -160,20 +194,27 @@
 		 * @access		public
 		 * @memberOf	ContentSlider
 		 * @since		1.0
-		 * @updated		1.2
+		 * @updated		1.2.1
 		 */
 		this.initSlider = function() {
-			var slides = slider_widget_container.find('div.slider');
-			
 			if (options.image_base == null) {
-				alert('No image base specified for ContentSlider widget.');
+				throw 'ContentSlider widget: no image base specified.';
 				return;
 			}
+			
+			// First remove any previously-added slider stuff...
+			slider_widget_container.find('div.current_slide_indicator').remove();
+			slider_widget_container.find('img[data-navigation-direction]').remove();
+			current_slider = slider_widget_container.find('div.slider:first-child');
+			sliders_container.scrollLeft(0);
+			
+			// Then add the new stuff...
+			var slides = slider_widget_container.find('div.slider');
 			
 			slider_widget_container.addClass('content_slider_widget');
 			
 			// add the indicators that show which slide we're on
-			var slide_indicator_div = $("<div class='current_slide_indicator'></div>");
+			var slide_indicator_div = $("<div></div>").addClass('current_slide_indicator');
 			var full_sliders_width = 0;
 			if (slides.length > 0) {
 				var cur_slide_width = 0;
@@ -183,19 +224,25 @@
 					cur_slide_width = $(slide).width();
 					full_sliders_width += cur_slide_width;
 					if (options.navigation_inline == false) {
-						slide_indicator_div.append($("<img src='"+options.image_base+"/slider-inactive-slide.png' class='slide_indicator' width='10' height='10' />"));
+						slide_indicator_div.append($("<img>").attr({src:options.image_base+"/slider-inactive-slide.png",width:10,height:10}).addClass('slide_indicator'));
 					}
 				});
 			}
 			
 			// Add the navigation buttons
-			var left_slider_navigation = $("<img src='"+options.image_base+"/slider-left-arrow-static.png' class='slider_left' data-navigation-direction='left' width='20' height='20' />");
-			var right_slider_navigaton = $("<img src='"+options.image_base+"/slider-right-arrow-static.png' class='slider_right enabled' data-navigation-direction='right' width='20' height='20' />");
+			var left_slider_navigation = $("<img>")
+											.attr({src:options.image_base+"/slider-left-arrow-static.png",
+												   'data-navigation-direction':'left'})
+											.addClass('slider_left');
+			var right_slider_navigaton = $("<img>")
+											.attr({src:options.image_base+"/slider-right-arrow-static.png",
+												   'data-navigation-direction':'right'})
+											.addClass('slider_right enabled');
 			if (options.navigation_inline == false) {
 				slide_indicator_div.prepend(left_slider_navigation);
 				slide_indicator_div.append(right_slider_navigaton);
 				slider_widget_container.append(slide_indicator_div);
-				$(slider_widget_container.find('img.slide_indicator').get(0)).attr('src', options.image_base+'/slider-active-slide.png');
+				slider_widget_container.find('img.slide_indicator').eq(0).attr('src', options.image_base+'/slider-active-slide.png');
 			}
 			else {
 				left_slider_navigation.addClass('inline');
@@ -215,13 +262,18 @@
 			slider_widget_container.addRightArrowHandlers();
 			
 			// set final width and height for overflow and sliders containers
-			current_slider = $(slides.get(0));
+			current_slider = slides.eq(0);
 			slider_widget_container.find('img.slider_left').attr('src', options.image_base+'/slider-left-arrow-grey.png'); // hide the left navigation by default
 			overflow_contaner.css({width: full_sliders_width+'px'});
 			sliders_container.css({width: current_slider.width()+'px', height:options.slider_height+'px'});
 			
+			// Add the current options as data on the slider_widget_container
+			slider_widget_container.data('content-slider-options', options);
+			
 			// Start auto-scroll - wait half a second, then do it
-			setTimeout(function() { slider_widget_container.trigger('startAutoScroll'); }, 500);
+			if (options.auto_scroll) {
+				setTimeout(function() { slider_widget_container.trigger('startAutoScroll'); }, 500);
+			}
 		}
 		
 		/**
@@ -466,7 +518,6 @@
 		 * @updated		1.2
 		 */
 		this.addLeftArrowHandlers = function() {
-			//, {user_action: true}
 			slider_widget_container.find('img.slider_left').on('click', slider_widget_container.slideNavigationClickHandler);
 			slider_widget_container.find('img.slider_left').on('mouseover', function() { if ($(this).hasClass('enabled')) {$(this).attr('src', options.image_base+'/slider-left-arrow-rollover.png'); }});
 			slider_widget_container.find('img.slider_left').on('mouseout', function() { if ($(this).hasClass('enabled')) {$(this).attr('src', options.image_base+'/slider-left-arrow-static.png'); }});
@@ -486,8 +537,23 @@
 			slider_widget_container.find('img.slider_right').on('mouseout', function() { if ($(this).hasClass('enabled')) {$(this).attr('src', options.image_base+'/slider-right-arrow-static.png'); }});
 		}
 		
-		/********* Initialize the slider *********/
-		this.initSlider();
+		/********* Initialize the slider, or call a specific function *********/
+		if (typeof options_or_method == "string") {
+			/* Call a specific function */
+			
+			options = slider_widget_container.data('content-slider-options');
+			
+			if (options_or_method == 'reinit') {
+				// Reinitialize the content slider
+				this.initSlider();
+			}
+		}
+		else {
+			/* Initialize the content slider box */
+			options = $.extend(default_options, options_or_method);
+			this.initSlider();
+		}
+		
 		
 		/********* Return the newly extended element for chaining *********/
 		return this;

@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<title>Content Slider 1.2 Example</title>
+		<title>Content Slider 1.2.1 Example</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta http-equiv="imagetoolbar" content="no" />
 		<link rel="stylesheet" type="text/css" href="css/contentSlider.css" />
@@ -39,8 +39,7 @@
 					</div>
 				</div>
 			</div>
-		</div><br />
-		
+		</div>
 		
 		<script type='text/javascript'>
 			// Initialize global rollovers for the site.
@@ -51,6 +50,10 @@
 													 navigation_inline : false,
 													 autoscroll_direction : 'left',
 													 debug: true});
+			
+			setTimeout(function() {
+				$('#slider_section_left').contentSlider('reinit');
+			}, 10000);
 		</script>
 	</body>
 </html>
